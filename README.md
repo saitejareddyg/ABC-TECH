@@ -1,1 +1,2 @@
-# ABC-TECH
+# abctechnologies code
+"# assignment1" 
