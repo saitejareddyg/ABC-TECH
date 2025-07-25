@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ABC-TECH-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ABC-TECH
+  template:
+    metadata:
+      labels:
+        app: ABC-TECH
+    spec:
+      containers:
+        - name: ABC-TECH
+          image: saiteja8270/ABC-TECH
+          ports:
+            - containerPort: 8080
