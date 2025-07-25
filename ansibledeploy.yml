@@ -1,0 +1,15 @@
+- name: Deploy ABC Retail Docker Container
+  hosts: local
+  tasks:
+    - name: Pull Docker image from Docker Hub
+      docker_image:
+        name: saiteja8270/ABC-TECH
+        source: pull
+
+    - name: Run container on port 8080
+      docker_container:
+        name: abc-retail
+        image: saiteja8270/ABC-TECH
+        state: started
+        ports:
+          - "8080:8080"
