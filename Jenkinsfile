@@ -1,35 +1,29 @@
 pipeline {
     agent any
-
+    tools {
+        maven 'MAVEN_HOME'
+        jdk 'JAVA_HOME'
+    }
     environment {
-        IMAGE_NAME = "saiteja/abc-tech"
-        IMAGE_TAG  = "v1"
+        IMAGE_NAME = 'abc-retail-app'
+        DOCKERHUB_USER = 'yourdockerhubusername'
     }
-
     stages {
-        stage('Clone') {
+        stage('Checkout') { steps { git 'git@github.com:yourusername/abc-retail-devops.git' } }
+        stage('Build') { steps { sh 'mvn clean compile' } }
+        stage('Test') { steps { sh 'mvn test' } }
+        stage('Package') { steps { sh 'mvn package -DskipTests' } }
+        stage('Docker Build') { steps { sh 'docker build -t $DOCKERHUB_USER/$IMAGE_NAME .' } }
+        stage('Docker Push') {
             steps {
-                git 'git@github.com:saitejareddyg/ABC-TECH.git'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'mvn clean package -DskipTests'
-            }
-        }
-
-        stage('Docker Build & Push') {
-            steps {
-                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
-                sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
+                withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKERHUB_PASS')]) {
+                    sh '''
+                    echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
+                    docker push $DOCKERHUB_USER/$IMAGE_NAME
+                    '''
+                }
             }
         }
     }
-
-    post {
-        always {
-            echo 'Build and Docker push complete.'
-        }
-    }
+    post { always { cleanWs() } }
 }
