@@ -5,11 +5,11 @@ pipeline {
         jdk 'JAVA_HOME'
     }
     environment {
-        IMAGE_NAME = 'abc-retail-app'
-        DOCKERHUB_USER = 'yourdockerhubusername'
+        IMAGE_NAME = 'ABC-TECH'
+        DOCKERHUB_USER = 'saiteja8270'
     }
     stages {
-        stage('Checkout') { steps { git 'git@github.com:yourusername/abc-retail-devops.git' } }
+        stage('Checkout') { steps { git 'git@github.com:saitejareddyg/ABC-TECH.git' } }
         stage('Build') { steps { sh 'mvn clean compile' } }
         stage('Test') { steps { sh 'mvn test' } }
         stage('Package') { steps { sh 'mvn package -DskipTests' } }
